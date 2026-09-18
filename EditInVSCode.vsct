@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--  This is the file that defines the actual layout and type of the commands.
+		It is divided in different sections (e.g. command definition, command
+		placement, ...), with each defining a specific set of properties.
+		See the comment before each section for more details about how to
+		use it. -->
+
+  <!--  The VSCT compiler (the tool that translates this file into the binary
+		format that VisualStudio will consume) has the ability to run a preprocessor
+		on the vsct file, so it is possible to define some macros in the format of
+		$ex$ and use them inside the definitions or the visibility conditions. The
+		preprocessor is based on the C++ preprocessor, so it is possible to use all
+		the standard preprocessor directives, including #define for the macros and
+		#include to include other files. -->
+
+  <Extern href="stdidcmd.h"/>
+
+  <!--  This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <!--The Commands section is where commands, menus, and menu groups are defined.
+	  This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidEditInVSCodePackage">
+	<!-- Inside this section we have different sub-sections: one for the menus, another
+	for the menu groups, one for the buttons (the actual commands), one for the combos
+	and the last one for the bitmaps used. Each element is identified by a command id that
+	is a unique pair guid-numeric identifier; the guid part of the identifier is usually
+	called "command set" and is used to group different command inside a logically related
+	group; your package should define its own command set in order to avoid collisions
+	with command ids defined by other packages. -->
+
+	<Groups>
+	  <Group guid="guidEditInVSCodePackageCmdSet" id="MyMenuGroup" priority="0x0600">
+		<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+	  </Group>
+	  <Group guid="guidEditInVSCodePackageCmdSet" id="MyMenuGroupProject" priority="0x0600">
+		<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE"/>
+	  </Group>
+	</Groups>
+
+	<!--Buttons section. -->
+	<!--This section defines the elements the user can interact with, like a menu command or a button
+		or combo box in a toolbar. -->
+	<Buttons>
+	  <!--To define a menu group you have to specify its ID, the parent menu and its
+		  command flag, with value "Group". This means that its ID must not be attached to any
+		  command since it would be a command group. -->
+
+	  <!--To define a menu, a menu section (group) or a button you can use the elements
+		  Menu, Group, Button and Combo. -->
+
+	  <Button guid="guidEditInVSCodePackageCmdSet" id="EditInVSCodeCommandId" priority="0x0100" type="Button">
+		<Parent guid="guidEditInVSCodePackageCmdSet" id="MyMenuGroup" />
+		<CommandFlag>DynamicVisibility</CommandFlag>
+		<CommandFlag>DefaultInvisible</CommandFlag>
+		<Strings>
+		  <ButtonText>Edit in VS Code</ButtonText>
+		</Strings>
+	  </Button>
+
+	  <Button guid="guidEditInVSCodePackageCmdSet" id="EditInVSCodeCommandIdProject" priority="0x0100" type="Button">
+		<Parent guid="guidEditInVSCodePackageCmdSet" id="MyMenuGroupProject" />
+		<CommandFlag>DynamicVisibility</CommandFlag>
+		<CommandFlag>DefaultInvisible</CommandFlag>
+		<Strings>
+		  <ButtonText>Edit in VS Code</ButtonText>
+		</Strings>
+	  </Button>
+	</Buttons>
+  </Commands>
+
+  <Symbols>
+	<!-- This is the package guid. -->
+	<GuidSymbol name="guidEditInVSCodePackage" value="{d0467048-cd71-4cc7-9ad5-ef6d2f9e473d}" />
+
+	<!-- This is the guid used to group the menu commands together -->
+	<GuidSymbol name="guidEditInVSCodePackageCmdSet" value="{c1a89f0e-3d3b-4b2e-8f7e-6f2a1e3c9d21}">
+	  <IDSymbol name="MyMenuGroup" value="0x1020" />
+	  <IDSymbol name="MyMenuGroupProject" value="0x1021" />
+	  <IDSymbol name="EditInVSCodeCommandId" value="0x0100" />
+	  <IDSymbol name="EditInVSCodeCommandIdProject" value="0x0101" />
+	</GuidSymbol>
+  </Symbols>
+</CommandTable>
