@@ -21,10 +21,12 @@ namespace EditInVSCode
         public static readonly Guid CommandSet = new Guid("c1a89f0e-3d3b-4b2e-8f7e-6f2a1e3c9d21");
 
         private readonly AsyncPackage package;
+        private readonly DTE dte;
 
-        private EditInVSCodeCommand(AsyncPackage package, OleMenuCommandService commandService)
+        private EditInVSCodeCommand(AsyncPackage package, OleMenuCommandService commandService, DTE dte)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
+            this.dte = dte ?? throw new ArgumentNullException(nameof(dte));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
@@ -51,7 +53,8 @@ namespace EditInVSCode
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new EditInVSCodeCommand(package, commandService);
+            var dte = await package.GetServiceAsync(typeof(DTE)) as DTE;
+            Instance = new EditInVSCodeCommand(package, commandService, dte);
         }
 
         private void OnBeforeQueryStatus(object sender, EventArgs e)
@@ -111,13 +114,7 @@ namespace EditInVSCode
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var dte = ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                return await this.package.GetServiceAsync(typeof(DTE)) as DTE;
-            });
-
-            if (dte?.SelectedItems == null)
+            if (this.dte?.SelectedItems == null)
             {
                 return Array.Empty<string>();
             }
